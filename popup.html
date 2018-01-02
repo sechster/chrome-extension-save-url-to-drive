@@ -1,0 +1,59 @@
+<!doctype html>
+<html data-ng-app="gDriveApp" ng-csp="">
+  <head>
+		<title>Save URL to Drive</title>
+		
+		<script src="angular.min.js"></script>
+		<script src="classes.js"></script>
+		<script src="popup.js"></script>
+		<script src="gapiWrapper.js"></script>
+		<script src="gapi.client.js"></script>
+		
+
+    <style>
+      body {
+        font-family: Roboto,Arial,sans-serif;
+        font-size: 80%;
+		background-color: white;
+    }
+	  
+	  .header {
+		width: 400px;
+		clear: both;
+		padding: 7px;
+		background-color: #fafafa;
+		height: 20px;
+	  }
+	  
+	  .row {
+		white-space: pre;
+        text-overflow: ellipsis;
+        overflow: hidden;
+		width: 400px;
+        max-width: 400px;
+		clear: both;
+		border-top: 1px solid #e1e1e1;
+		padding: 7px;
+	  }
+	  
+	  .row:hover {
+		background-color: #4285f4;
+		color: white;
+	  }
+	  
+	  .folderName {
+		margin-left: 10px;
+	  }
+    </style>
+
+  </head>
+  <body data-ng-controller="FolderController" id="gDriveAppViewBodyElementID">
+	<div class="header">
+		<div style="float: left; margin-top: 3px;">Wybierz katalog:</div>
+		<div style="float: right;"><input type="button" id="saveButtonID" value="Zapisz tutaj" data-ng-click="save()" disabled="true"></input></div>
+	</div>
+	<div class="row" data-ng-repeat="folder in folders" data-ng-click="loadData(folder.id, folder.parentId)"><svg height="16px" width="16px" viewBox="0 -1 16 16" focusable="false"><g><path fill="#8f8f8f" d="M6.4,0H1.6C0.716,0,0,0.596,0,1.562V12.25C0,13.216,0.716,14,1.6,14h12.8 c0.884,0,1.6-0.784,1.6-1.75V3.5 c0-0.966-0.721-1.499-1.604-1.499L8,2L6.4,0z"></path></g></svg><span class="folderName">{{folder.name}}</span></div>
+
+  </body>
+</html>
+
