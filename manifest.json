@@ -4,7 +4,7 @@
   "name": "Save URL to Google Drive",
   "description": "This extension allows you to save the URL of a page you are currently visiting to a specified Google Drive Folder",
   "version": "1.0",
-  "key": "hfljcmheeeaggcdigmcekfojomnllodo",
+  "key": "imokmfjoonhmahgbjhpkkgfiocbaahjp",
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
@@ -15,13 +15,14 @@
   "permissions": [
     "activeTab",
     "identity",
-    "*://*.google.com/*"
+    "*://*.google.com/*",
+    "https://www.googleapis.com/"
   ],
   "content_security_policy": "script-src https://*.google.com 'unsafe-eval'; object-src 'self'",
   "oauth2": {
     "client_id": "784481866416-7fi2d8ho4qadl2pfclid2257ddqbh50v.apps.googleusercontent.com",
     "scopes": [
-      "https://www.googleapis.com/auth/drive.file"
+      "https://www.googleapis.com/auth/drive"
     ]
   }
   

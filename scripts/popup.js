@@ -14,7 +14,7 @@ define(["gapi", "angular"], function(gapi, angular) {
 	{
 		console.log("gapiLoaded");
 
-		chrome.identity.getAuthToken({'interactive': false}, function (token) {
+		chrome.identity.getAuthToken({'interactive': true}, function (token) {
 			gapi.client.setToken({access_token: token});
 			
 			console.log("token :", token);
