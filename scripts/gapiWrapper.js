@@ -1,6 +1,6 @@
 console.log("GapiWrapper");
 
-define(["gapi", "icon"], function(gapi, icon) { 
+define(["gapi", "icon"], function (gapi, icon) {
 
 	return {
 		authorize: authorize,
@@ -8,8 +8,7 @@ define(["gapi", "icon"], function(gapi, icon) {
 		getFolderListing: getFolderListing,
 	}
 
-	function authorize()
-	{
+	function authorize() {
 		console.log('authorize');
 
 		auth2 = gapi.auth2.init({
@@ -17,38 +16,36 @@ define(["gapi", "icon"], function(gapi, icon) {
 			scope: 'https://www.googleapis.com/auth/drive'
 		})
 
-		auth2.then(function () {gapi.client.load('drive', 'v3', window.gapiAuthorized)}, function(){});
+		auth2.then(function () { gapi.client.load('drive', 'v3', window.gapiAuthorized) }, function () { });
 	}
-	
-	function saveShortcutToGDrive(title, url, folderId, callback) 
-	{
-		var fileData = 
-		{
-			'fileName': '#' + title + '.url',
-			'data': '[InternetShortcut]\r\nURL=' + url
-		};
+
+	function saveShortcutToGDrive(title, url, folderId, callback) {
+		var fileData =
+			{
+				'fileName': '#' + title + '.url',
+				'data': '[InternetShortcut]\r\nURL=' + url
+			};
 
 		insertFileData(fileData, folderId, callback);
 	};
-	
-	function insertFileData(fileData, folderId, callback) 
-	{
+
+	function insertFileData(fileData, folderId, callback) {
 		const boundary = '-------314159265358979323846';
 		const delimiter = "\r\n--" + boundary + "\r\n";
 		const close_delim = "\r\n--" + boundary + "--";
 
 		var contentType = fileData.type || 'application/octect-stream';
-		var metadata = 
-		{
-			'title': fileData.fileName,
-			'mimeType': contentType,
-			'thumbnail': 
+		var metadata =
 			{
-				'image': icon.replace(/\+/g, '-').replace(/\//g, '_'),
-				'mimeType': 'image/png'
-			},
-			'parents': [ {'id': folderId} ]
-		};
+				'title': fileData.fileName,
+				'mimeType': contentType,
+				'thumbnail':
+					{
+						'image': icon.replace(/\+/g, '-').replace(/\//g, '_'),
+						'mimeType': 'image/png'
+					},
+				'parents': [{ 'id': folderId }]
+			};
 
 		var multipartRequestBody =
 			delimiter +
@@ -64,90 +61,45 @@ define(["gapi", "icon"], function(gapi, icon) {
 			{
 				'path': '/upload/drive/v2/files',
 				'method': 'POST',
-				'params': {'uploadType': 'multipart'},
-				'headers': {'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'},
+				'params': { 'uploadType': 'multipart' },
+				'headers': { 'Content-Type': 'multipart/mixed; boundary="' + boundary + '"' },
 				'body': multipartRequestBody
 			});
-		
-		request.then(function(response) { console.log("File saved succesfully."); callback(); }, function(reason) { console.log("Error: " + reason.body); });
+
+		request.then(function (response) { console.log("File saved succesfully."); callback(); }, function (reason) { console.log("Error: " + reason.body); });
 	};
-	
-	// function getFolderListing2(callback, folderId, parentId)
-	// {	
-	// 	var q = 'mimeType = \'application/vnd.google-apps.folder\' and trashed != true and \'' + folderId + '\' in parents'
-	// 	var retrievePageOfFiles = function(request, result, paramName) 
-	// 	{
-	// 		request.execute(
-	// 			function(resp) 
-	// 			{
-	// 				result = result.concat(resp.items);
-	// 				console.log(result);
-	// 				var nextPageToken = resp.nextPageToken;
-					
-	// 				if (nextPageToken) 
-	// 				{
-						
-	// 					request = gapi.client.drive.files.list({'pageToken': nextPageToken, 'q': q});
-	// 					retrievePageOfFiles(request, result, 'nextPageToken');
-	// 				} 
-	// 				else 
-	// 				{
-	// 					var output = [];
-						
-	// 					if (parentId !== null)
-	// 					{
-	// 						output.push({ 'name': '..', 'id': parentId, 'parentId': null});
-	// 					}
-						
-	// 					for(var i = 0; i < result.length; i++)
-	// 					{
-	// 						output.push({ 'name': result[i].title, 'id': result[i].id, 'parentId': folderId});
-	// 					}
-						
-	// 					callback(output);
-	// 					return;
-	// 				}
-	// 			});
-	// 	}
-		
-	// 	var initialRequest = gapi.client.drive.files.list({'q': q});
-	// 	retrievePageOfFiles(initialRequest, [], 'pageToken');
-	// };
 
 	function getFolderListing(callback, folderId, parentId) {
-		//var q = 'mimeType = \'application/vnd.google-apps.folder\' and trashed != true and \'' + folderId + '\' in parents';
 		var q = `mimeType = 'application/vnd.google-apps.folder' and trashed != true and '${folderId}' in parents`;
-		//var q = `mimeType = 'application/vnd.google-apps.folder'`;
-		//var q = `trashed = false and '${folderId}' in parents`;
-		var retrievePageOfFiles = function(request, result, paramName) {
-		  request.execute(function(resp) {
-			result = result.concat(resp.files);
-			console.log(resp);
-			var nextPageToken = resp.nextPageToken;
-			if (nextPageToken) {
-			  request = gapi.client.drive.files.list({
-				paramName: nextPageToken,
-				'q': q, 
-				orderBy: 'name'
-			  });
-			  retrievePageOfFiles(request, result, 'nextPageToken');
-			} else {
-				var output = [];
-				console.log(result);
-						
-				if (parentId !== null) {
-					output.push({ 'name': '..', 'id': parentId, 'parentId': null});
+		var retrievePageOfFiles = function (request, result, paramName) {
+			request.execute(function (resp) {
+				result = result.concat(resp.files);
+				console.log(resp);
+				var nextPageToken = resp.nextPageToken;
+				if (nextPageToken) {
+					request = gapi.client.drive.files.list({
+						paramName: nextPageToken,
+						'q': q,
+						orderBy: 'name'
+					});
+					retrievePageOfFiles(request, result, 'nextPageToken');
+				} else {
+					var output = [];
+					console.log(result);
+
+					if (parentId !== null) {
+						output.push({ 'name': '..', 'id': parentId, 'parentId': null });
+					}
+
+					for (var i = 0; i < result.length; i++) {
+						output.push({ 'name': result[i].name, 'id': result[i].id, 'parentId': folderId });
+					}
+
+					callback(output);
 				}
-				
-				for(var i = 0; i < result.length; i++){
-					output.push({ 'name': result[i].name, 'id': result[i].id, 'parentId': folderId});
-				}
-				
-				callback(output);
-			}
-		  });
+			});
 		}
-		var initialRequest = gapi.client.drive.files.list({'q': q, orderBy: 'name'});
+		var initialRequest = gapi.client.drive.files.list({ 'q': q, orderBy: 'name' });
 		retrievePageOfFiles(initialRequest, [], 'pageToken');
 	}
 });

@@ -1,5 +1,3 @@
-console.log("popup");
-
 define(["gapi", "angular"], function(gapi, angular) {
 
 	return {

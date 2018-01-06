@@ -4,7 +4,7 @@
   "name": "Save URL to Google Drive",
   "description": "This extension allows you to save the URL of a page you are currently visiting to a specified Google Drive Folder",
   "version": "1.0",
-  "key": "imokmfjoonhmahgbjhpkkgfiocbaahjp",
+  "key": "kdehlccpoieealfepengmhcednfnodif",
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
