@@ -18,7 +18,20 @@
     "*://*.google.com/*",
     "https://www.googleapis.com/"
   ],
-  "content_security_policy": "script-src https://*.google.com 'unsafe-eval'; object-src 'self'",
+  "content_scripts": [{
+    "js": [
+      "scripts/angularApp.js",
+      "scripts/app.js",
+      "scripts/gapiWrapper.js",
+      "scripts/icon.js",
+      "scripts/main.js",
+      "scripts/popup.js",
+      "scripts/require.js",
+      "scripts/lib/angular.js",
+      "scripts/lib/gapi.client.js"],
+    "matches": ["http://*/*", "https://*/*"]
+  }],
+  "content_security_policy": "script-src 'self' https://*.google.com 'unsafe-eval'; object-src 'self'",
   "oauth2": {
     "client_id": "784481866416-7fi2d8ho4qadl2pfclid2257ddqbh50v.apps.googleusercontent.com",
     "scopes": [
